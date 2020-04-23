@@ -18,6 +18,11 @@ import java.util.ArrayList;
 
 public class ListFruitAdapter extends RecyclerView.Adapter<ListFruitAdapter.ListViewHolder> {
     private ArrayList<Fruit> listFruit;
+    private OnItemClickCallback onItemClickCallback;
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback;
+    }
 
     public ListFruitAdapter(ArrayList<Fruit> list) {
         this.listFruit = list;
@@ -31,14 +36,23 @@ public class ListFruitAdapter extends RecyclerView.Adapter<ListFruitAdapter.List
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ListViewHolder holder, int position) {
         Fruit fruit = listFruit.get(position);
+
         Glide.with(holder.itemView.getContext())
                 .load(fruit.getPicture())
                 .apply(new RequestOptions().override(40, 40))
                 .into(holder.imgPicture);
+
         holder.tvName.setText(fruit.getName());
         holder.tvDescription.setText(fruit.getDescription());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickCallback.onItemClicked(listFruit.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
@@ -55,5 +69,9 @@ public class ListFruitAdapter extends RecyclerView.Adapter<ListFruitAdapter.List
             tvName = itemView.findViewById(R.id.tv_item_name);
             tvDescription = itemView.findViewById(R.id.tv_item_description);
         }
+    }
+
+    public interface OnItemClickCallback {
+        void onItemClicked(Fruit data);
     }
 }

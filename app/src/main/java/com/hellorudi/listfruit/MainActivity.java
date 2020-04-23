@@ -1,5 +1,6 @@
 package com.hellorudi.listfruit;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,5 +49,30 @@ public class MainActivity extends AppCompatActivity {
         rvFruits.setLayoutManager(new LinearLayoutManager(this));
         ListFruitAdapter listFruitAdapter = new ListFruitAdapter(list);
         rvFruits.setAdapter(listFruitAdapter);
+
+        listFruitAdapter.setOnItemClickCallback(new ListFruitAdapter.OnItemClickCallback() {
+            @Override
+            public void onItemClicked(Fruit data) {
+//                showSelectedFruit(data);
+
+                toDetailFruit(data);
+            }
+        });
     }
+
+    private void toDetailFruit(Fruit data) {
+        Fruit fruit = new Fruit();
+        fruit.setName(data.getName());
+        fruit.setDescription(data.getDescription());
+        fruit.setPicture(data.getPicture());
+
+        Intent detailFruitIntent = new Intent(MainActivity.this, DetailFruitActivity.class);
+        detailFruitIntent.putExtra(DetailFruitActivity.EXTRA_FRUIT, fruit);
+        startActivity(detailFruitIntent);
+    }
+
+    /*private void showSelectedFruit(Fruit fruit) {
+        Toast.makeText(this, "Kamu memilih " + fruit.getName(), Toast.LENGTH_SHORT).show();
+    }*/
+
 }
